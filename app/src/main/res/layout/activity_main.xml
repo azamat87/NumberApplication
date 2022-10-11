@@ -7,14 +7,24 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_margin="@dimen/small_margin"
+        android:hint="@string/input_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/numberEditText"
+            android:inputType="number"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLength="10"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
