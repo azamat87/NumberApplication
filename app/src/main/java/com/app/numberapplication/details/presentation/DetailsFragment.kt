@@ -31,4 +31,16 @@ class DetailsFragment : Fragment() {
 
     }
 
+    companion object {
+
+        private const val KEY = "DETAILS"
+
+        fun newInstance(value: String) = DetailsFragment().apply {
+            arguments = Bundle().apply {
+                putString(KEY, value)
+            }
+        }
+
+    }
+
 }

@@ -32,10 +32,7 @@ class NumbersFragment : Fragment() {
         view.findViewById<ProgressBar>(R.id.progressBar).visibility = GONE
 
         view.findViewById<Button>(R.id.getFactButton).setOnClickListener {
-            val fragment = DetailsFragment()
-            fragment.arguments = Bundle().apply {
-                putString("details", "some text details")
-            }
+            val fragment = DetailsFragment.newInstance("some text details")
 
             requireActivity().supportFragmentManager.beginTransaction()
                 .add(R.id.container, fragment)
