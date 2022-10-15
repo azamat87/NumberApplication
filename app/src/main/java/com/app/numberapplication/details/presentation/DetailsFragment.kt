@@ -25,7 +25,7 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val text = requireArguments().getString("details", "")
+        val text = requireArguments().getString(KEY, "")
 
         view.findViewById<TextView>(R.id.detailsTextView).text = text
 

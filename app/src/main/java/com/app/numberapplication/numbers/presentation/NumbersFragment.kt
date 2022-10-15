@@ -1,5 +1,6 @@
 package com.app.numberapplication.numbers.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +11,17 @@ import android.widget.Button
 import android.widget.ProgressBar
 import com.app.numberapplication.R
 import com.app.numberapplication.details.presentation.DetailsFragment
+import com.app.numberapplication.main.presentation.ShowFragment
 
 
 class NumbersFragment : Fragment() {
 
+    private var showFragment : ShowFragment = ShowFragment.Empty()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        showFragment = context as ShowFragment
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +41,13 @@ class NumbersFragment : Fragment() {
 
         view.findViewById<Button>(R.id.getFactButton).setOnClickListener {
             val fragment = DetailsFragment.newInstance("some text details")
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .add(R.id.container, fragment)
-                .addToBackStack(fragment.javaClass.simpleName)
-                .commit()
+            showFragment.show(fragment)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        showFragment = ShowFragment.Empty()
     }
 
 }
