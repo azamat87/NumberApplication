@@ -1,5 +1,8 @@
 package com.app.numberapplication.numbers.presentation
 
+import com.app.numberapplication.numbers.domain.NumberFact
+import com.app.numberapplication.numbers.domain.NumbersInteractor
+import com.app.numberapplication.numbers.domain.NumbersResult
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -23,7 +26,7 @@ class NumbersViewModelTest {
         assertEquals(false, communications.progressCalledList[1])
 
         assertEquals(1, communications.stateCalledList.size)
-        assertEquals(UiState.Sueccess(), communications.stateCalledList[0])
+        assertEquals(UiState.Sueccess(emptyList<NumberUi>()), communications.stateCalledList[0])
 
         assertEquals(0, communications.numbersList.size)
         assertEquals(1, communications.timesShowList)
@@ -42,7 +45,7 @@ class NumbersViewModelTest {
         assertEquals(true, communications.progressCalledList[3])
 
         assertEquals(2, communications.stateCalledList.size)
-        assertEquals(UiState.Error(), communications.stateCalledList[0])
+        assertEquals(UiState.Error("no internet connection"), communications.stateCalledList[0])
         assertEquals(1, communications.timesShowList)
 
         viewModel.init(isFirstRun = false)
@@ -78,14 +81,14 @@ class NumbersViewModelTest {
         // init
         val viewModel = NumbersViewModel(communications, interactor)
 
-        interactor.changeExpectedResult(NumbersResult.Success(listOf(Number("1", "number fact info"))))
+        interactor.changeExpectedResult(NumbersResult.Success(listOf(NumberFact("1", "number fact info"))))
         viewModel.fetchFact("1")
         //check
         assertEquals(1, communications.progressCalledList.size)
         assertEquals(true, communications.progressCalledList[0])
 
         assertEquals(1, interactor.fetchAboutNumberList.size)
-        assertEquals(Number("1", "number fact info"), interactor.fetchAboutNumberList[0])
+        assertEquals(NumberFact("1", "number fact info"), interactor.fetchAboutNumberList[0])
 
         assertEquals(2, communications.progressCalledList.size)
         assertEquals(false, communications.progressCalledList[1])
@@ -122,7 +125,7 @@ class NumbersViewModelTest {
 
     private class TestNumbersInteractor : NumbersInteractor {
 
-        private var result : NumbersResult = NumbersResult.Sueccess()
+        private var result : NumbersResult = NumbersResult.Success()
         val initCalledList = mutableListOf<NumbersResult>()
         val fetchAboutNumberList = mutableListOf<NumbersResult>()
         val fetchAboutRandomNumberList = mutableListOf<NumbersResult>()
