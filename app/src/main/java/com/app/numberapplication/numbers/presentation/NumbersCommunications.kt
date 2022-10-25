@@ -8,6 +8,8 @@ interface NumbersCommunications {
 
     fun showList(list: List<NumberUi>)
 
+    class Base {
 
+    }
 
 }
