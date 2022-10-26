@@ -1,6 +1,9 @@
 package com.app.numberapplication.numbers.presentation
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.app.numberapplication.numbers.domain.NumberFact
+import com.app.numberapplication.numbers.domain.NumberUiMapper
 import com.app.numberapplication.numbers.domain.NumbersInteractor
 import com.app.numberapplication.numbers.domain.NumbersResult
 import org.junit.Assert.*
@@ -13,7 +16,7 @@ class NumbersViewModelTest {
         val communications = TestNumberCommunications()
         val interactor = TestNumbersInteractor()
         // init
-        val viewModel = NumbersViewModel(communications, interactor)
+        val viewModel = NumbersViewModel(communications, interactor, NumbersResultMapper(communications, NumberUiMapper()))
         interactor.changeExpectedResult(NumbersResult.Success())
         //action
         viewModel.init(isFirstRun = true)
@@ -26,15 +29,15 @@ class NumbersViewModelTest {
         assertEquals(false, communications.progressCalledList[1])
 
         assertEquals(1, communications.stateCalledList.size)
-        assertEquals(UiState.Sueccess(emptyList<NumberUi>()), communications.stateCalledList[0])
+        assertEquals(1, UiState.Success())
 
         assertEquals(0, communications.numbersList.size)
         assertEquals(1, communications.timesShowList)
 
 
         // get data
-        interactor.changeExpectedResult(NumbersResult.Failure())
-        viewModel.fetchRandomNumberData()
+        interactor.changeExpectedResult(NumbersResult.Failure(""))
+        viewModel.fetchRandomNumberFact()
 
         assertEquals(3, communications.progressCalledList.size)
         assertEquals(true, communications.progressCalledList[2])
@@ -60,9 +63,9 @@ class NumbersViewModelTest {
         val communications = TestNumberCommunications()
         val interactor = TestNumbersInteractor()
         // init
-        val viewModel = NumbersViewModel(communications, interactor)
+        val viewModel = NumbersViewModel(communications, interactor, NumbersResultMapper(communications, NumberUiMapper()))
 
-        viewModel.fetchFact("")
+        viewModel.fetchNumberFact("")
         assertEquals(0, interactor.fetchAboutNumberList.size)
 
         assertEquals(0, communications.progressCalledList.size)
@@ -79,10 +82,11 @@ class NumbersViewModelTest {
         val communications = TestNumberCommunications()
         val interactor = TestNumbersInteractor()
         // init
-        val viewModel = NumbersViewModel(communications, interactor)
+        val viewModel =
+            NumbersViewModel(communications, interactor, NumbersResultMapper(communications, NumberUiMapper()))
 
         interactor.changeExpectedResult(NumbersResult.Success(listOf(NumberFact("1", "number fact info"))))
-        viewModel.fetchFact("1")
+        viewModel.fetchNumberFact("1")
         //check
         assertEquals(1, communications.progressCalledList.size)
         assertEquals(true, communications.progressCalledList[0])
@@ -121,6 +125,11 @@ class NumbersViewModelTest {
             numbersList.addAll(list)
         }
 
+        override fun observeProgress(owner: LifecycleOwner, observer: Observer<Boolean>) = Unit
+
+        override fun observeState(owner: LifecycleOwner, observer: Observer<UiState>) = Unit
+
+        override fun observeList(owner: LifecycleOwner, observer: Observer<List<NumberUi>>) = Unit
     }
 
     private class TestNumbersInteractor : NumbersInteractor {
